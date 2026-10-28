@@ -1,6 +1,5 @@
 """
 Tic Tac Toe Game using Constraint Satisfaction Problem (CSP) and GUI
-=====================================================================
 
 This implementation uses CSP principles to model the game:
 - Variables: 9 board cells (0-8)
@@ -17,7 +16,6 @@ The AI uses CSP with constraint propagation and Minimax to find optimal moves.
 import tkinter as tk
 from tkinter import font
 
-
 class TicTacToeCSP:
     """
     Constraint Satisfaction Problem formulation for Tic Tac Toe.
@@ -30,11 +28,11 @@ class TicTacToeCSP:
         - Global: winning lines (rows, cols, diagonals)
     """
     
-    # All winning lines (rows, columns, diagonals) - these are our CSP constraints
+    # All winning lines (rows, columns, diagonals)
     WINNING_LINES = [
         [0, 1, 2], [3, 4, 5], [6, 7, 8],   # rows
         [0, 3, 6], [1, 4, 7], [2, 5, 8],   # columns
-        [0, 4, 8], [2, 4, 6]                # diagonals
+        [0, 4, 8], [2, 4, 6]               # diagonals
     ]
     
     def __init__(self):
@@ -61,7 +59,7 @@ class TicTacToeCSP:
         winner, _ = self.check_winner(board)
         return winner is not None
     
-    # ---------- CSP-based heuristic evaluation ----------
+    # CSP Based evaluation
     def evaluate_line(self, board, line, player):
         """
         Evaluate a single line using CSP constraint logic.
@@ -94,7 +92,7 @@ class TicTacToeCSP:
         """Sum the satisfaction of constraints across all winning lines."""
         return sum(self.evaluate_line(board, line, player) for line in self.WINNING_LINES)
     
-    # ---------- Constraint Propagation: Find forced moves ----------
+    # Constraint Propagation: Force moves
     def find_forced_move(self, board, player):
         """
         Apply constraint propagation (like AC-3 arc consistency) to find
@@ -104,7 +102,7 @@ class TicTacToeCSP:
         """
         opponent = 'O' if player == 'X' else 'X'
         
-        # Check for a winning move first (satisfies our goal constraint immediately)
+        # Check for a winning move first
         for move in self.get_legal_moves(board):
             test_board = board.copy()
             test_board[move] = player
@@ -112,7 +110,7 @@ class TicTacToeCSP:
             if winner == player:
                 return move, "win"
         
-        # Block opponent's winning move (prevents violation of our goal)
+        # Block opponent's winning move
         for move in self.get_legal_moves(board):
             test_board = board.copy()
             test_board[move] = opponent
@@ -122,7 +120,7 @@ class TicTacToeCSP:
         
         return None, None
     
-    # ---------- Minimax with Alpha-Beta (for optimal play) ----------
+    # Minimax with Alpha-Beta
     def minimax(self, board, depth, is_maximizing, alpha, beta, ai_player):
         """
         Minimax search through the CSP state space with alpha-beta pruning.
